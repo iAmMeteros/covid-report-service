@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Вход{% endblock %}
+{% block body %}
+<form action="/login/" method="post">
+    {% csrf_token %}
+    <input type="text" name="username" id="username" required placeholder="Имя пользователя">
+    <input type="password" name="password" id="password" required placeholder="Пароль">
+    <button type="submit">Войти</button>
+    {% if error %}Ошибка{% endif %}
+</form>
+<a href="/register/">Создать аккаунт</a>
+{% endblock %}
