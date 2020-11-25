@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block title %}Обновление состояния{% endblock %}
+{% block head %}
+<script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
+</link>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
+</link>
+<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster-src.js"></script>
+<script type="text/javascript">
+    var map;
+    var points = []
+
+    DG.then(function () {
+        return DG.plugin('https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js');
+    }).then(function () {
+        map = DG.map('map', {
+            center: [53.22, 50.16],
+            zoom: 12,
+            poi: false,
+            fullscreenControl: false,
+            zoomControl: false
+        });
+
+        var markers = DG.markerClusterGroup({
+            maxClusterRadius: 50
+        });
+        map.addLayer(markers);
+
+        var markersA = []
+
+        map.on('click', (e) => {
+            var lat = e.latlng.lat
+            var lng = e.latlng.lng
+            var marker = DG.marker([lat, lng], {
+                draggable: true
+            })
+            points.push([lat, lng])
+            markersA.push(marker)
+            markers.addLayer(marker)
+            marker.on('click', () => {
+                var index = markersA.indexOf(marker)
+                points.splice(index, 1)
+                markersA.splice(index, 1)
+                markers.removeLayer(marker)
+            })
+            marker.on('drag', function (e) {
+                var lat = e.target._latlng.lat.toFixed(3),
+                    lng = e.target._latlng.lng.toFixed(3);
+                index = markersA.indexOf(marker);
+                points[index] = [lat, lng]
+                console.log(points)
+            });
+        })
+
+    });
+</script>
+{% endblock %}
+{% block body %}
+<div class="container">
+    <h1>Сообщите ваше состояние здоровья</h1>
+    <form action="/report/" method="post">
+        {% csrf_token %}
+        <div>
+            <h3>Вам пришел результат теста?</h3>
+            <label>
+                <input type="radio" name="has_result" value="y" required> Да
+            </label>
+            <label>
+                <input type="radio" name="has_result" value="n"> Нет
+            </label><br>
+        </div>
+        <div id="test_result_div">
+            <h3>Результат вашего теста.</h3>
+            <label>
+                <input type="radio" name="test_result" value="p"> Положительный
+            </label>
+            <label>
+                <input type="radio" name="test_result" value="n"> Отрицательный
+            </label><br>
+        </div>
+        <div>
+            <h3>Возможные контакты с носителями.</h3>
+            <label>
+                <input type="radio" name="contacts" value="n" required> Контакта с носителями не наблюдалось
+            </label><br>
+            <label>
+                <input type="radio" name="contacts" value="p"> Наблюдался контакт с потенциальным переносчиком вируса
+            </label><br>
+            <label>
+                <input type="radio" name="contacts" value="a"> Наблюдался контакт с заражённым
+            </label><br>
+        </div>
+        <div>
+            <h3>Симптомы, которые у вас проявляются.</h3>
+            <label>
+                <input type="checkbox" name="symptoms" value="TP"> Повышение температуры тела
+            </label><br>
+            <label>
+                <input type="checkbox" name="symptoms" value="DC"> Сухой кашель
+            </label><br>
+            <label>
+                <input type="checkbox" name="symptoms" value="FT"> Утомляемость
+            </label><br>
+            <label>
+                <input type="checkbox" name="symptoms" value="PS"> Различные болевые ощущения
+            </label><br>
+            <label>
+                <input type="checkbox" name="symptoms" value="ST"> Боль в горле
+            </label><br>
+            <label>
+                <input type="checkbox" name="symptoms" value="DR"> Диарея
+            </label><br>
+            <label>
+                <input type="checkbox" name="symptoms" value="CN"> Конъюнктивит
+            </label><br>
+            <label>
+                <input type="checkbox" name="symptoms" value="HD"> Головная боль
+            </label><br>
+            <label>
+                <input type="checkbox" name="symptoms" value="LT"> Потеря обоняния и вкусовых ощущений
+            </label><br>
+            <label>
+                <input type="checkbox" name="symptoms" value="SR"> Сыпь на коже
+            </label><br>
+            <label>
+                <input type="checkbox" name="symptoms" value="DB"> Затрудненное дыхание или одышка
+            </label><br>
+            <label>
+                <input type="checkbox" name="symptoms" value="CP"> Боль в грудной клетке
+            </label><br>
+            <label>
+                <input type="checkbox" name="symptoms" value="MF"> Нарушение речи или двигательных функций
+            </label><br>
+            <input type="hidden" name="symptomsStr" id="symptoms">
+            <input type="hidden" name="places" id="places">
+        </div>
+        <div>
+            <h3>Укажите места, которые вы недавно посещали</h3>
+            <p>Нажмите на карту, чтобы добавить место. Нажмите на метку, чтобы удалить её. Вы можете перетаскивать
+                метки.</p>
+            <div id="map" style="height:600px"></div>
+        </div>
+        <button type="submit">Отправить</button>
+    </form>
+    <br>
+    <br>
+</div>
+<script>
+    $('form').submit(() => {
+        var symptoms = [];
+        $('input:checked[name="symptoms"]').each((index, el) => {
+            symptoms.push($(el).val());
+        });
+        $('#symptoms').val(symptoms.join(';'));
+        $("#places").val(points.join(';'));
+        return true
+    });
+
+    $('input[name="has_result"]').change(() => {
+        if ($('input:checked[name="has_result"]').val() == 'y') {
+            $("#test_result_div").show(500)
+            $('input[name="test_result"]').prop('required', true)
+        } else {
+            $("#test_result_div").hide(500)
+            $('input[name="test_result"]').prop('required', false)
+        }
+    })
+</script>
+{% endblock %}

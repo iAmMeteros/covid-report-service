@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from AuthCore import urls
+import AuthCore.urls as authUrls
+import ReportCore.urls as reportUrls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 
-urlpatterns += urls.urlpatterns
+urlpatterns += authUrls.urlpatterns
+urlpatterns += reportUrls.urlpatterns
