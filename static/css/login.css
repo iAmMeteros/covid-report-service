@@ -1,0 +1,109 @@
+.nav div.main_list ul li a,
+.nav div.logo a {
+  color: black;
+  transition: 0.5s all ease;
+  border-radius: 50px;
+}
+.nav div.main_list ul li a:hover,
+.nav div.logo a:hover {
+  color: white;
+  background-color: #4E88D9;
+  padding: 0.5rem 1rem;
+  margin-right: -1rem;
+  margin-left: -1rem;
+}
+
+.shpulke-logo {
+  position: fixed;
+  bottom: 2rem;
+  left: 0;
+  height: 3rem;
+  left: 50%;
+  -ms-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
+}
+
+.login-container {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  height: 30rem;
+  width: 25rem;
+  box-shadow: 0px 0px 37px -5px rgba(0, 0, 0, 0.75);
+  border-radius: 25px;
+}
+.login-container h1 {
+  font-family: "Raleway", sans-serif;
+  text-align: center;
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+.login-container label {
+  display: block;
+  margin: 0;
+  margin-left: 10%;
+}
+.login-container form {
+  margin-left: 5%;
+  width: 90%;
+}
+.login-container form .create-account {
+  text-align: center;
+}
+.login-container form .error {
+  color: red;
+  text-align: center;
+  position: absolute;
+  bottom: 2rem;
+  width: 90%;
+}
+.login-container input {
+  border: none;
+  background-image: none;
+  background-color: transparent;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background-color: #dddddd;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  margin-bottom: 0.5rem;
+  width: 90%;
+  margin-left: 5%;
+  transition: 0.5s all ease;
+}
+.login-container input:hover, .login-container input:focus {
+  outline: 0;
+  width: 95%;
+  margin-left: 2.5%;
+}
+.login-container button {
+  border: none;
+  background-image: none;
+  background-color: transparent;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background-color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  margin-bottom: 0.5rem;
+  width: 90%;
+  margin-left: 5%;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+  border: 2px solid #4E88D9;
+  color: #4E88D9;
+  margin-top: 1rem;
+  transition: 0.5s all ease;
+}
+.login-container button:hover, .login-container button:focus {
+  outline: 0;
+  background-color: #4E88D9;
+  color: white;
+  width: 95%;
+  margin-left: 2.5%;
+}

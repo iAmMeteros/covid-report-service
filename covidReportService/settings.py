@@ -123,8 +123,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "pfr_utils/static"),
+    BASE_DIR / "static",
 ]
 
 AUTH_USER_MODEL = "AuthCore.User"

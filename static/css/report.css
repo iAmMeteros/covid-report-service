@@ -1,0 +1,72 @@
+.nav div.main_list ul li a,
+.nav div.logo a {
+  color: black;
+  transition: 0.5s all ease;
+  border-radius: 50px;
+}
+.nav div.main_list ul li a:hover,
+.nav div.logo a:hover {
+  color: white;
+  background-color: #4E88D9;
+  padding: 0.5rem 1rem;
+  margin-right: -1rem;
+  margin-left: -1rem;
+}
+
+.title,
+h3 {
+  font-family: "Raleway", sans-serif;
+}
+
+h3 {
+  margin-top: 2rem;
+}
+
+#map {
+  border-radius: 25px;
+  box-shadow: 0px 0px 37px -5px rgba(0, 0, 0, 0.75);
+  height: 700px;
+}
+
+.spandiv {
+  margin-bottom: 0.5rem;
+}
+.spandiv .span {
+  margin-left: 0.5rem;
+}
+
+.label,
+.span {
+  font-family: "Montserrat", sans-serif;
+}
+
+html {
+  padding-top: 6rem;
+  padding-bottom: 5rem;
+}
+
+.content {
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+
+.sendButton {
+  color: #4E88D9;
+  display: inline-block;
+  font-size: 1.5rem;
+  background-color: white;
+  padding: 0.5rem 1.2rem;
+  font-family: "Montserrat", sans-serif;
+  margin-top: 2.7rem;
+  border-radius: 50px;
+  transition: 0.4s;
+  cursor: pointer;
+  border: 3px solid #4E88D9;
+}
+.sendButton:hover, .sendButton:focus {
+  color: white;
+  background-color: #4E88D9;
+  font-size: 1.8rem;
+  margin-top: 2.4rem;
+  margin-left: -1rem;
+}

@@ -1,0 +1,97 @@
+$accent-color: #4E88D9;
+$green: #48ce2d;
+
+.nav div.main_list ul li a,
+.nav div.logo a {
+    color: black;
+    transition: 0.5s all ease;
+    border-radius: 50px;
+    &:hover{
+        color: white;
+        background-color: $accent-color;
+        padding: 0.5rem 1rem;
+        margin-right: -1rem;
+        margin-left: -1rem;
+    }
+} 
+
+
+html{
+    padding-top: 6rem;
+    padding-bottom: 5rem;
+}
+
+html, body{
+    display: flex;
+    flex-grow: column;
+    height: 100%;
+    width: 100%;
+}
+
+.content{
+    padding-left: 3rem;
+    padding-right: 3rem;
+    height: 100%;
+}
+
+.title {
+    font-family: 'Raleway', sans-serif;
+}
+
+.label {
+    font-family: 'Montserrat', sans-serif;
+}
+
+#map {
+    border-radius: 25px;
+    box-shadow: 0px 0px 37px -5px rgba(0, 0, 0, 0.75);
+    min-height: 85%;
+    height: auto !important;
+    height: 85%;
+}
+
+
+.alert{
+    .message{
+        height: 30rem;
+        .danger{
+            margin: 0;
+            position: absolute;
+            top: 0.7rem;
+            left: 50%;
+            -ms-transform: translate(-50%, 0.7rem);
+            transform: translate(-50%, 0.7rem);
+            text-align: center;
+            font-size: 2rem;
+            line-height: 2rem;
+            color: $green;
+
+            .verdict{
+                margin-top: 0.6rem;
+                font-size: 1.8rem;
+                line-height: 1.8rem;
+                font-family: 'Raleway', sans-serif;
+            }
+        }
+        .description{
+            font-family: 'Montserrat', sans-serif;
+            position: relative;
+            margin-left: 1.3rem;
+            margin-right: 1.3rem;
+            font-size: 1.3rem;
+            line-height: 1.5rem;
+            margin-top: 7rem;
+        }
+        .comment{
+            font-family: 'Montserrat', sans-serif;
+            position: absolute;
+            margin-left: 1rem;
+            margin-right: 1rem;
+            font-size: 1.3rem;
+            line-height: 1.5rem;
+            bottom: 1.5rem;
+            text-align: center;
+            font-weight: bold;
+        }
+    }
+}

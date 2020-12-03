@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}ReportCovid{% endblock %}
+{% block head %}
+<style>
+    body {
+        background-image: url({% static 'virus-background-flipped.jpg' %}); 
+    }
+</style>
+<script src="{% static 'fa/js/all.js'%}"></script>
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock %}
+{% block body %}
+<script>
+    $("body").fadeOut(1);
+    $("body").fadeIn(500)
+</script>
+<nav class="nav">
+    <div class="container-fluid">
+        <div class="logo">
+            <a href="/">ReportCovid</a>
+        </div>
+        <div id="mainListDiv" class="main_list">
+            <ul class="navlinks">
+                <li><a href="/map/"><i class="far fa-map"></i> Карта</a></li>
+                <li><a href="/radar/"><i class="far fa-location"></i> Радар</a></li>
+                <li><a href="/report/"><i class="far fa-engine-warning"></i> Репорт</a></li>
+                {% if request.user.is_authenticated %}
+                <li><a href="/logout/"><i class="far fa-user"></i> {{request.user.username}} | Выйти</a></li>
+                {% else %}
+                <li><a href="/login/"><i class="far fa-sign-in-alt"></i> Войти</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        <span class="navTrigger">
+            <i></i>
+            <i></i>
+            <i></i>
+        </span>
+    </div>
+</nav>
+<div class="title">
+    Следите за вирусом.<br>
+    С точностью до района.
+</div>
+<div class="button" onclick="location.href = '/map/'">
+    К карте <i class="fal fa-arrow-right"></i>
+</div>
+<img class="shpulke-logo" src="{% static 'shpulke-white.png' %}" alt="" srcset="">
+{% endblock %}

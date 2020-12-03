@@ -1,0 +1,78 @@
+$accent-color: #4E88D9;
+
+.nav div.main_list ul li a,
+.nav div.logo a {
+    color: black;
+    transition: 0.5s all ease;
+    border-radius: 50px;
+    &:hover{
+        color: white;
+        background-color: $accent-color;
+        padding: 0.5rem 1rem;
+        margin-right: -1rem;
+        margin-left: -1rem;
+    }
+}
+
+.title,
+h3 {
+    font-family: 'Raleway', sans-serif;
+}
+
+h3 {
+    margin-top: 2rem;
+}
+
+#map {
+    border-radius: 25px;
+    box-shadow: 0px 0px 37px -5px rgba(0, 0, 0, 0.75);
+    height: 700px;
+}
+
+.spandiv {
+    margin-bottom: 0.5rem;
+
+    .span {
+        margin-left: 0.5rem;
+    }
+}
+
+.label,
+.span {
+    font-family: 'Montserrat', sans-serif;
+}
+
+html {
+    padding-top: 6rem;
+    padding-bottom: 5rem;
+}
+
+.content {
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
+.sendButton {
+    color: $accent-color;
+    display: inline-block;
+    font-size: 1.5rem;
+    background-color: white;
+    padding: 0.5rem 1.2rem;
+    font-family: 'Montserrat', sans-serif;
+    margin-top: 1.5+1.2rem;
+    // font-weight: bold;
+    border-radius: 50px;
+    transition: 0.4s;
+    cursor: pointer;
+    border: 3px solid $accent-color;
+
+
+    &:hover,
+    &:focus {
+        color: white;
+        background-color: $accent-color;
+        font-size: 1.8rem;
+        margin-top: 1.2+1.2rem;
+        margin-left: -1rem;
+    }
+}

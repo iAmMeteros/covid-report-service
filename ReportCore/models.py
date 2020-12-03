@@ -31,8 +31,8 @@ class Report(models.Model):
 
     id = models.AutoField(_("Идентификатор репорта"), primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    reportTime = models.DateTimeField(_("Дата репорта"), auto_now_add=True)
-    reportEndTime = models.DateTimeField(_("Дата окончания действия репорта"), null=True)
+    reportTime = models.DateField(_("Дата репорта"), auto_now_add=True)
+    reportEndTime = models.DateField(_("Дата окончания действия репорта"), null=True)
     symptoms = models.CharField(_("Симптомы"), max_length=50, blank=True)
     status = models.CharField(_("Состояние"), max_length=1, choices=STATUSES, default='W')
     contact = models.CharField(_("Контакты"), max_length=1, choices=CONTACTS, default='N')

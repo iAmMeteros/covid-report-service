@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Радар{% endblock %}
+{% block head %}
+<script src="{% static 'fa/js/all.js'%}"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" href="{% static 'css/map.css' %}">
+<script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
+</link>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
+</link>
+<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster-src.js"></script>
+<script type="text/javascript">
+    var map;
+
+    function createFormattedList(array){
+        var formattedString = ""
+        array.forEach(place => {
+            formattedString += "+ " + place + "<br>"
+        });
+        return formattedString
+    }
+
+    DG.then(function () {
+        return DG.plugin('https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js');
+    }).then(function () {
+        map = DG.map('map', {
+            center: [53.22, 50.16],
+            zoom: 12,
+            poi: false,
+            fullscreenControl: false,
+            zoomControl: false,
+        });
+
+        map.on('click', (e) => {
+            var lat = e.latlng.lat
+            var lng = e.latlng.lng
+
+            $.ajax({
+                url: "/api/placescan",
+                type: "GET",
+                data: {
+                    lat: lat,
+                    lng: lng
+                },
+                success: (data, status) => {
+                    let answer = JSON.parse(data)
+                    if (answer["status"] == "notfound") {
+                        $(".danger").show()
+                        $(".danger").css("color", "#48ce2d")
+                        $("#1").removeClass("fal").addClass("fas")
+                        $("#2").removeClass("fas").addClass("fal")
+                        $("#3").removeClass("fas").addClass("fal")
+                        $(".verdict").text("Безопасно")
+                        $(".description").text("Судя по всему, данное место безопасно для посещения.")
+                        $(".alert").fadeIn(250)
+                    } else if (answer["status"] == "apilimit") {
+                        $(".danger").hide()
+                        $(".description").text("Превышен лимит обращений к внешнему API. Подождите минуту.")
+                        $(".alert").fadeIn(250)
+                    } else {
+                        $(".danger").show()
+                        $("#1").removeClass("fas").addClass("fal")
+                        $("#2").removeClass("fas").addClass("fal")
+                        $("#3").removeClass("fas").addClass("fal")
+                        if (answer["danger"] >= 1){
+                            $("#1").removeClass("fal").addClass("fas")
+                            $(".danger").css("color", "#48ce2d")
+                            $(".verdict").text("Безопасно")
+                            $(".description").html("Судя по всему, данное место безопасно для посещения.")
+                        }
+                        if (answer["danger"] >= 2){
+                            $("#2").removeClass("fal").addClass("fas")
+                            $(".danger").css("color", "#F29F3A")
+                            $(".verdict").text("Средне")
+                            $(".description").html("Мы нашли здесь следующие типы мест:<br><br>" + createFormattedList(answer["places"]))
+                        }
+                        if (answer["danger"] >= 3){
+                            $("#3").removeClass("fal").addClass("fas")
+                            $(".danger").css("color", "#FF4343")
+                            $(".verdict").text("Опасно")
+                            $(".description").html("Мы нашли здесь следующие типы мест:<br><br>" + createFormattedList(answer["places"]))
+                        }
+                        $(".alert").fadeIn(250)
+                    }
+                    $(".close").click(()=>{
+                        $(".alert").fadeOut(250)
+                    })
+                }
+            })
+        })
+    });
+    
+</script>
+{% endblock %}
+{% block body %}
+<div class="alert">
+    <div class="message">
+        <div class="close">
+            <i class="far fa-times-circle"></i>
+        </div>
+        <div class="danger">
+            <i id="1" class="fas fa-circle"></i> <i id="2" class="fal fa-circle"></i> <i id="3" class="fal fa-circle"></i>
+            <div class="verdict">Вердикт</div>
+        </div>
+        <div class="description">
+            Описание
+        </div>
+        <div class="comment">
+            Всегда используйте средства индивидуальной защиты в общественных местах!
+        </div>
+    </div>
+</div>
+<script>$(".alert").fadeOut(1)</script>
+<nav class="nav">
+    <div class="container-fluid">
+        <div class="logo">
+            <a href="/">CovidReport</a>
+        </div>
+        <div id="mainListDiv" class="main_list">
+            <ul class="navlinks">
+                <li><a href="/map/"><i class="far fa-map"></i> Карта</a></li>
+                <li><a href="/radar/"><i class="far fa-location"></i> Радар</a></li>
+                <li><a href="/report/"><i class="far fa-engine-warning"></i> Репорт</a></li>
+                {% if request.user.is_authenticated %}
+                <li><a href="/logout/"><i class="far fa-user"></i> {{request.user.username}} | Выйти</a></li>
+                {% else %}
+                <li><a href="/login/"><i class="far fa-sign-in-alt"></i> Войти</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        <span class="navTrigger">
+            <i></i>
+            <i></i>
+            <i></i>
+        </span>
+    </div>
+</nav>
+<div class="content container-fluid">
+    <h1 class="title">Радар</h1>
+    <span class="label">Кликните по нужному вам месту и радар покажет возможный риск заболевания.</span><br><br>
+    <div id="map"></div>
+</div>
+<div class="about">Made by <img src="{% static 'shpulke-black.png' %}" alt="" srcset=""></div>
+{% endblock %}
