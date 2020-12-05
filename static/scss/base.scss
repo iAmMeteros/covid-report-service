@@ -1,5 +1,19 @@
 $accent-color: #4E88D9;
 
+.nav div.main_list ul li a,
+.nav div.logo a {
+    color: black;
+    transition: 0.5s all ease;
+    border-radius: 50px;
+    &:hover{
+        color: white;
+        background-color: $accent-color;
+        padding: 0.5rem 1rem;
+        margin-right: -1rem;
+        margin-left: -1rem;
+    }
+}
+
 body {
     margin: 0;
     padding: 0;

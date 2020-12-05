@@ -37,7 +37,7 @@ def reportCreate(request):
                 lastReport.places = places
                 lastReport.reportTime = datetime.now()
                 lastReport.save()
-                return redirect('/')
+                return render(request, "successreport.html")
             else:
                 lastReport.reportEndTime = datetime.now()
                 lastReport.save()
@@ -53,7 +53,7 @@ def reportCreate(request):
         report.save()
         request.user.last_report = report.id
         request.user.save()
-        return redirect('/map/')
+        return render(request, "successreport.html")
 
 
 def mapView(request):

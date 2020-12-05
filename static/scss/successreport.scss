@@ -1,0 +1,139 @@
+$accent-color: #4E88D9;
+$green: #73AF55;
+
+.nav div.main_list ul li a,
+.nav div.logo a {
+    color: black;
+    transition: 0.5s all ease;
+    border-radius: 50px;
+    &:hover{
+        color: white;
+        background-color: $accent-color;
+        padding: 0.5rem 1rem;
+        margin-right: -1rem;
+        margin-left: -1rem;
+    }
+}
+
+.card-container{
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    height: 30rem;
+    width: 25rem;
+    box-shadow: 0px 0px 37px -5px rgba(0, 0, 0, 0.75);
+    border-radius: 25px;
+
+    h3{
+        font-family: 'Raleway', sans-serif;
+        text-align: center;
+        margin-bottom: 2.5rem;
+        margin-top: 20px;
+        color: $green;
+    }
+
+    p{
+        text-align: center;
+        width: 90%;
+        margin-left: 5%;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.2rem;
+    }
+
+    button{
+        border:none;
+        background-image:none;
+        background-color:transparent;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+
+        background-color:white;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        margin-bottom: 0.5rem;
+        width: 90%;
+        margin-left: 5%;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.2rem;
+        border: 2px solid $accent-color;
+        color: $accent-color;
+        margin-top: 1rem;
+
+        transition: 0.5s all ease;
+
+        &:hover,
+        &:focus{
+            outline:0;
+            background-color: $accent-color;
+            color: white;
+            width: 95%;
+            margin-left: 2.5%;
+        }
+    }
+}
+
+.svg {
+    width: 100px;
+    display: block;
+    margin: 40px auto 0;
+}
+
+.path {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 0;
+    &.circle {
+      -webkit-animation: dash .9s ease-in-out;
+      animation: dash .9s ease-in-out;
+    }
+    &.line {
+      stroke-dashoffset: 1000;
+      -webkit-animation: dash .9s .35s ease-in-out forwards;
+      animation: dash .9s .35s ease-in-out forwards;
+    }
+    &.check {
+      stroke-dashoffset: -100;
+      -webkit-animation: dash-check .9s .35s ease-in-out forwards;
+      animation: dash-check .9s .35s ease-in-out forwards;
+    }
+  }
+
+  @-webkit-keyframes dash {
+    0% {
+      stroke-dashoffset: 1000;
+    }
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+  
+  @keyframes dash {
+    0% {
+      stroke-dashoffset: 1000;
+    }
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+  
+  @-webkit-keyframes dash-check {
+    0% {
+      stroke-dashoffset: -100;
+    }
+    100% {
+      stroke-dashoffset: 900;
+    }
+  }
+  
+  @keyframes dash-check {
+    0% {
+      stroke-dashoffset: -100;
+    }
+    100% {
+      stroke-dashoffset: 900;
+    }
+  }
+  

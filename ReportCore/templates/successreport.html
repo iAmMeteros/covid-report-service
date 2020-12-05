@@ -1,25 +1,16 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}CovidReport{% endblock %}
 {% block head %}
-<style>
-    body {
-        background-image: url({% static 'virus-background-flipped.jpg' %}); 
-    }
-</style>
 <script src="{% static 'fa/js/all.js'%}"></script>
-<link rel="stylesheet" href="{% static 'css/index.css' %}">
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" href="{% static 'css/successreport.css' %}">
 {% endblock %}
+{% block title %}Репорт отправлен{% endblock %}
 {% block body %}
-<script>
-    $("body").fadeOut(1);
-    $("body").fadeIn(500)
-</script>
 <nav class="nav">
     <div class="container-fluid">
         <div class="logo">
@@ -44,12 +35,14 @@
         </span>
     </div>
 </nav>
-<div class="title">
-    Следите за вирусом.<br>
-    С точностью до района.
+<div class="card-container">
+    <svg class="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+        <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+        <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
+    </svg>
+    <h3>Репорт отправлен!</h3>
+    <p>Спасибо за ваш отчёт. Каждый репорт значим для составления карты и анализа распространения коронавируса.</p>
+    <button onclick="document.location.href = '/map/'">К карте</button>
 </div>
-<div class="button" onclick="location.href = '/map/'">
-    К карте <i class="fal fa-arrow-right"></i>
-</div>
-<img class="shpulke-logo" src="{% static 'shpulke-white.png' %}" alt="" srcset="">
+<img class="shpulke-logo" src="{% static 'shpulke-black.png' %}" alt="" srcset="">
 {% endblock %}
