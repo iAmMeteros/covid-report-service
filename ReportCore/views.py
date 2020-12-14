@@ -137,3 +137,6 @@ def getPlaces(request):
             else:
                 answer['danger'] = 2
     return HttpResponse(json.dumps(answer))
+
+def instructionView(request):
+    return render(request, "instruction.html")

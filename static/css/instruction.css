@@ -1,0 +1,38 @@
+.nav div.main_list ul li a,
+.nav div.logo a {
+  color: black;
+  transition: 0.5s all ease;
+  border-radius: 50px;
+}
+.nav div.main_list ul li a:hover,
+.nav div.logo a:hover {
+  color: white;
+  background-color: #4E88D9;
+  padding: 0.5rem 1rem;
+  margin-right: -1rem;
+  margin-left: -1rem;
+}
+
+.title,
+h3 {
+  font-family: "Raleway", sans-serif;
+}
+
+html {
+  padding-top: 6rem;
+  padding-bottom: 5rem;
+}
+
+.content {
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+.content h3 {
+  margin-top: 2rem;
+  padding-left: 1rem;
+}
+.content p {
+  padding-left: 2rem;
+  font-size: 1.2rem;
+  width: 50rem;
+}

@@ -1,70 +1,18 @@
-{% extends "base.html" %}
+{% extends "report-base.html" %}
 {% load static %}
 {% block title %}Обновление состояния{% endblock %}
 {% block head %}
-<script src="{% static 'fa/js/all.js'%}"></script>
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@800&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/base.css' %}">
 <link rel="stylesheet" href="{% static 'css/report.css' %}">
-<script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
-</link>
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
-</link>
-<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster-src.js"></script>
-<script type="text/javascript">
-    var map;
-    var points = []
 
-    DG.then(function () {
-        return DG.plugin('https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js');
-    }).then(function () {
-        map = DG.map('map', {
-            center: [53.22, 50.16],
-            zoom: 12,
-            poi: false,
-            fullscreenControl: false,
-            zoomControl: false
-        });
+<script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-clustering.js"></script>
 
-        var markers = DG.markerClusterGroup({
-            maxClusterRadius: 50
-        });
-        map.addLayer(markers);
-
-        var markersA = []
-
-        map.on('click', (e) => {
-            var lat = e.latlng.lat
-            var lng = e.latlng.lng
-            var marker = DG.marker([lat, lng], {
-                draggable: true
-            })
-            points.push([lat, lng])
-            markersA.push(marker)
-            markers.addLayer(marker)
-            marker.on('click', () => {
-                var index = markersA.indexOf(marker)
-                points.splice(index, 1)
-                markersA.splice(index, 1)
-                markers.removeLayer(marker)
-            })
-            marker.on('drag', function (e) {
-                var lat = e.target._latlng.lat.toFixed(3),
-                    lng = e.target._latlng.lng.toFixed(3);
-                index = markersA.indexOf(marker);
-                points[index] = [lat, lng]
-                console.log(points)
-            });
-        })
-
-    });
-</script>
+<link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
 {% endblock %}
-{% block body %}
+{% block content %}
 <div class="alert">
     <div class="message">
         <div class="close">
@@ -75,32 +23,8 @@
         </div>
     </div>
 </div>
-<nav class="nav">
-    <div class="container-fluid">
-        <div class="logo">
-            <a href="/">CovidReport</a>
-        </div>
-        <div id="mainListDiv" class="main_list">
-            <ul class="navlinks">
-                <li><a href="/map/"><i class="far fa-map"></i> Карта</a></li>
-                <li><a href="/radar/"><i class="far fa-location"></i> Радар</a></li>
-                <li><a href="/report/"><i class="far fa-engine-warning"></i> Репорт</a></li>
-                {% if request.user.is_authenticated %}
-                <li><a href="/logout/"><i class="far fa-user"></i> {{request.user.username}} | Выйти</a></li>
-                {% else %}
-                <li><a href="/login/"><i class="far fa-sign-in-alt"></i> Войти</a></li>
-                {% endif %}
-            </ul>
-        </div>
-        <span class="navTrigger">
-            <i></i>
-            <i></i>
-            <i></i>
-        </span>
-    </div>
-</nav>
 <script>
-    function sendForm(){
+    function sendForm() {
         $("form").submit();
     }
     $(".alert").fadeOut(1)
@@ -300,31 +224,30 @@
             <h3>Укажите места, которые вы недавно посещали</h3>
             <p>Нажмите на карту, чтобы добавить место. Нажмите на метку, чтобы удалить её. Вы можете перетаскивать
                 метки.</p>
-                <div id="map" style="height:600px"></div>
-            </div>
-            <div class="sendButton" onclick="sendForm()">Отправить <i class="far fa-paper-plane"></i></div>
+            <div id="map" style="height:600px"></div>
+        </div>
+        <div class="sendButton" onclick="sendForm()">Отправить <i class="far fa-paper-plane"></i></div>
     </form>
     <br>
     <br>
 </div>
-<div class="about">Made by <img src="{% static 'shpulke-black.png' %}" alt="" srcset=""></div>
 <script>
     $("#test_result_div").hide();
 
     $('form').submit(() => {
-        if ($("input[name='has_result']").is(":checked")){
-            if (!$("input[name='test_result']").is(":checked")){
+        if ($("input[name='has_result']").is(":checked")) {
+            if (!$("input[name='test_result']").is(":checked")) {
                 $(".alert").fadeIn(200)
-                $(".close").click(()=>{
+                $(".close").click(() => {
                     $(".alert").fadeOut(200)
                 })
                 return false
             }
         }
 
-        if(!$("input[name='contacts']").is(":checked")){
+        if (!$("input[name='contacts']").is(":checked")) {
             $(".alert").fadeIn(200)
-            $(".close").click(()=>{
+            $(".close").click(() => {
                 $(".alert").fadeOut(200)
             })
             return false
@@ -348,6 +271,83 @@
             $('input[name="has_result_h"]').val("false")
             $("#test_result_div").hide(500)
             $('input[name="test_result"]').prop('required', false)
+        }
+    })
+
+    var platform = new H.service.Platform({
+        'apikey': config.MAPS_API
+    })
+
+    var defaultLayers = platform.createDefaultLayers();
+
+    var map = new H.Map(
+        document.getElementById('map'),
+        defaultLayers.vector.normal.map, {
+            zoom: 12,
+            center: {
+                lat: 53.22,
+                lng: 50.16
+            }
+        });
+
+    window.addEventListener('resize', () => map.getViewPort().resize());
+    var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+    var ui = H.ui.UI.createDefault(map, defaultLayers, 'ru-RU');
+
+    var points = []
+    var markers = []
+
+    map.addEventListener('tap', function (e) {
+        if (e.target instanceof H.map.Marker) {
+            var index = markers.indexOf(e.target)
+            points.splice(index, 1)
+            markers.splice(index, 1)
+            map.removeObject(e.target)
+        } else {
+            var coords = map.screenToGeo(e.currentPointer.viewportX, e.currentPointer.viewportY)
+            var lat = coords.lat
+            var lng = coords.lng
+
+            var newMarker = new H.map.Marker({
+                lat: lat,
+                lng: lng
+            }, {
+                volatility: true
+            })
+
+            newMarker.draggable = true
+            map.addObject(newMarker)
+            map.setCenter(map.getCenter())
+            markers.push(newMarker)
+            points.push([lat, lng])
+            map.addEventListener('dragstart', function (ev) {
+                var target = ev.target,
+                    pointer = ev.currentPointer;
+                if (target instanceof H.map.Marker) {
+                    var targetPosition = map.geoToScreen(target.getGeometry());
+                    target['offset'] = new H.math.Point(pointer.viewportX - targetPosition.x, pointer
+                        .viewportY - targetPosition.y);
+                    behavior.disable();
+                }
+            }, false);
+
+            map.addEventListener('dragend', function (ev) {
+                var target = ev.target;
+                if (target instanceof H.map.Marker) {
+                    behavior.enable();
+                }
+            }, false);
+
+            map.addEventListener('drag', function (ev) {
+                var target = ev.target,
+                    pointer = ev.currentPointer;
+                if (target instanceof H.map.Marker) {
+                    target.setGeometry(map.screenToGeo(pointer.viewportX - target['offset'].x, pointer
+                        .viewportY - target['offset'].y));
+                    points[markers.indexOf(target)] = [target.getGeometry().lat, target.getGeometry().lng]
+                }
+            }, false);
         }
     })
 </script>

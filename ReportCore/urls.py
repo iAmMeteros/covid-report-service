@@ -7,4 +7,5 @@ urlpatterns = [
     path('', indexView),
     path('radar/', radarView),
     path('api/placescan/', getPlaces),
+    path('instruction/', instructionView),
 ]

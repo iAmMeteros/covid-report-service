@@ -1,0 +1,17 @@
+{% extends "report-base.html" %}
+{% load static %}
+{% block title %}Справка{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/instruction.css' %}">
+{% endblock %}
+{% block content %}
+<div class="container-fluid content">
+    <h1 class="title">Что делать при позозрении на COVID-19?</h1>
+    <h3>1. Изолируйтесь</h3>
+    <p>Если вы не одни в квартире, незамедлительно изолируйтесь в отдельной комнате и постарайтесь как можно реже выходить из неё.</p>
+    <h3>2. Вызовите помощь</h3>
+    <p>Обратитесь к врачу, либо в скорую помощь.</p>
+    <h3>3. Сдайте тест</h3>
+    <p>Пройдите тест на COVID-19.</p>
+</div>
+{% endblock %}

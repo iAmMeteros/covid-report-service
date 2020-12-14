@@ -1,48 +1,19 @@
-{% extends "base.html" %}
+{% extends "report-base.html" %}
 {% load static %}
 {% block head %}
-<script src="{% static 'fa/js/all.js'%}"></script>
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@800&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/base.css' %}">
 <link rel="stylesheet" href="{% static 'css/successreport.css' %}">
 {% endblock %}
 {% block title %}Репорт отправлен{% endblock %}
-{% block body %}
-<nav class="nav">
-    <div class="container-fluid">
-        <div class="logo">
-            <a href="/">CovidReport</a>
-        </div>
-        <div id="mainListDiv" class="main_list">
-            <ul class="navlinks">
-                <li><a href="/map/"><i class="far fa-map"></i> Карта</a></li>
-                <li><a href="/radar/"><i class="far fa-location"></i> Радар</a></li>
-                <li><a href="/report/"><i class="far fa-engine-warning"></i> Репорт</a></li>
-                {% if request.user.is_authenticated %}
-                <li><a href="/logout/"><i class="far fa-user"></i> {{request.user.username}} | Выйти</a></li>
-                {% else %}
-                <li><a href="/login/"><i class="far fa-sign-in-alt"></i> Войти</a></li>
-                {% endif %}
-            </ul>
-        </div>
-        <span class="navTrigger">
-            <i></i>
-            <i></i>
-            <i></i>
-        </span>
-    </div>
-</nav>
+{% block content %}
 <div class="card-container">
     <svg class="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
         <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
         <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
     </svg>
     <h3>Репорт отправлен!</h3>
-    <p>Спасибо за ваш отчёт. Каждый репорт значим для составления карты и анализа распространения коронавируса.</p>
+    <p>Спасибо за ваш отчёт. Каждый репорт значим для составления карты и анализа распространения коронавируса.<br><br>
+        <a href="/instruction/">Узнайте, что делать при подозрении на COVID-19</a>
+    </p>
     <button onclick="document.location.href = '/map/'">К карте</button>
 </div>
-<img class="shpulke-logo" src="{% static 'shpulke-black.png' %}" alt="" srcset="">
 {% endblock %}
