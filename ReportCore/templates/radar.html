@@ -13,7 +13,7 @@
 <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
 
 <script type="text/javascript">
-    function createFormattedList(array){
+    function createFormattedList(array) {
         var formattedString = ""
         array.forEach(place => {
             formattedString += "+ " + place + "<br>"
@@ -29,7 +29,8 @@
             <i class="far fa-times-circle"></i>
         </div>
         <div class="danger">
-            <i id="1" class="fas fa-circle"></i> <i id="2" class="fal fa-circle"></i> <i id="3" class="fal fa-circle"></i>
+            <i id="1" class="fas fa-circle"></i> <i id="2" class="fal fa-circle"></i> <i id="3"
+                class="fal fa-circle"></i>
             <div class="verdict">Вердикт</div>
         </div>
         <div class="description">
@@ -40,91 +41,13 @@
         </div>
     </div>
 </div>
-<script>$(".alert").fadeOut(1)</script>
+<script>
+    $(".alert").fadeOut(1)
+</script>
 <div class="content container-fluid">
     <h1 class="title">Радар</h1>
     <span class="label">Кликните по нужному вам месту и радар покажет возможный риск заболевания.</span><br><br>
     <div id="map"></div>
 </div>
-<script>
-    var platform = new H.service.Platform({
-        'apikey': config.MAPS_API
-    })
-
-    var defaultLayers = platform.createDefaultLayers();
-
-    var map = new H.Map(
-        document.getElementById('map'),
-        defaultLayers.vector.normal.map, {
-            zoom: 12,
-            center: {
-                lat: 53.22,
-                lng: 50.16
-            }
-        });
-
-    window.addEventListener('resize', () => map.getViewPort().resize());
-    var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-
-    var ui = H.ui.UI.createDefault(map, defaultLayers, 'ru-RU');
-
-    map.addEventListener('tap', function(e) {
-        var coords = map.screenToGeo(e.currentPointer.viewportX, e.currentPointer.viewportY)
-        var lat = coords.lat
-        var lng = coords.lng
-
-        $.ajax({
-            url: "/api/placescan",
-            type: "GET",
-            data: {
-                lat: lat,
-                lng: lng
-            },
-            success: (data, status) => {
-                let answer = JSON.parse(data)
-                if (answer["status"] == "notfound") {
-                    $(".danger").show()
-                    $(".danger").css("color", "#48ce2d")
-                    $("#1").removeClass("fal").addClass("fas")
-                    $("#2").removeClass("fas").addClass("fal")
-                    $("#3").removeClass("fas").addClass("fal")
-                    $(".verdict").text("Безопасно")
-                    $(".description").text("Судя по всему, данное место безопасно для посещения.")
-                    $(".alert").fadeIn(250)
-                } else if (answer["status"] == "apilimit") {
-                    $(".danger").hide()
-                    $(".description").text("Превышен лимит обращений к внешнему API. Подождите минуту.")
-                    $(".alert").fadeIn(250)
-                } else {
-                    $(".danger").show()
-                    $("#1").removeClass("fas").addClass("fal")
-                    $("#2").removeClass("fas").addClass("fal")
-                    $("#3").removeClass("fas").addClass("fal")
-                    if (answer["danger"] >= 1){
-                        $("#1").removeClass("fal").addClass("fas")
-                        $(".danger").css("color", "#48ce2d")
-                        $(".verdict").text("Безопасно")
-                        $(".description").html("Судя по всему, данное место безопасно для посещения.")
-                    }
-                    if (answer["danger"] >= 2){
-                        $("#2").removeClass("fal").addClass("fas")
-                        $(".danger").css("color", "#F29F3A")
-                        $(".verdict").text("Средне")
-                        $(".description").html("Мы нашли здесь следующие типы мест:<br><br>" + createFormattedList(answer["places"]))
-                    }
-                    if (answer["danger"] >= 3){
-                        $("#3").removeClass("fal").addClass("fas")
-                        $(".danger").css("color", "#FF4343")
-                        $(".verdict").text("Опасно")
-                        $(".description").html("Мы нашли здесь следующие типы мест:<br><br>" + createFormattedList(answer["places"]))
-                    }
-                    $(".alert").fadeIn(250)
-                }
-                $(".close").click(()=>{
-                    $(".alert").fadeOut(250)
-                })
-            }
-        })
-    })
-</script>
+<script src="{% static 'js/radar.js' %}"></script>
 {% endblock %}

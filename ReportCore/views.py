@@ -140,3 +140,6 @@ def getPlaces(request):
 
 def instructionView(request):
     return render(request, "instruction.html")
+
+def isolinesView(request):
+    return render(request, "isolines.html")
