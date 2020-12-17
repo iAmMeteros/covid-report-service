@@ -8,5 +8,6 @@ urlpatterns = [
     path('radar/', radarView),
     path('api/placescan/', getPlaces),
     path('instruction/', instructionView),
-    path('isolines/', isolinesView)
+    path('isolines/', isolinesView),
+    path('route/', routerView),
 ]

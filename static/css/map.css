@@ -59,6 +59,22 @@ html, body {
   margin-left: -0.4rem;
 }
 
+.result h3 {
+  font-family: "Raleway", sans-serif;
+}
+
+.red {
+  color: #b93232;
+}
+
+.yellow {
+  color: #b9a532;
+}
+
+.green {
+  color: #32b94f;
+}
+
 .searchParameters .spandiv {
   padding-bottom: 0.5rem;
   margin-left: 0.5rem;

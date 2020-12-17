@@ -6,10 +6,20 @@ import requests
 import json
 import pprint
 
+HUB_URL = 'https://xyz.api.here.com/hub'
+SPACE_ID = 'IyUOqpuL'
+HUB_TOKEN = 'AMg0v9DBTIaKd7gNIsnS1gA'
 
 def indexView(request):
     return render(request, 'index.html')
 
+def deleteNonActualFeatures(features):
+    featuresToDelete = features.split(';')
+    headers = {'Authorization': f'Bearer {HUB_TOKEN}',
+                'Content-Type': 'application/geo+json'}
+    if(len(featuresToDelete) > 0): 
+        url = HUB_URL + f'/spaces/{SPACE_ID}/features?id=' + '&id='.join(featuresToDelete)
+        r = requests.delete(url, headers=headers)
 
 @login_required
 def reportCreate(request):
@@ -28,6 +38,28 @@ def reportCreate(request):
         contacts = request.POST['contacts']
         symptoms = request.POST['symptomsStr']
         places = request.POST['places']
+        coords = [i.split(',') for i in places.split(';')]
+        url = HUB_URL + f'/spaces/{SPACE_ID}/features'
+        payload = {
+            "type": "FeatureCollection",
+            "features": []
+        }
+        for lat, lng in coords:
+            payload['features'].append({
+                "type": "Feature",
+                "geometry":
+                {
+                    "type": "Point",
+                    "coordinates": [float(lng), float(lat)]
+                }
+            })
+        headers = {'Authorization': f'Bearer {HUB_TOKEN}',
+                'Content-Type': 'application/geo+json'}
+        r = requests.post(url, data=json.dumps(payload), headers=headers)
+        response = r.json()
+        print(response)
+        ids = ';'.join([feature['id'] for feature in response['features']])
+        lastReport = None
         try:
             lastReport = Report.objects.get(id=int(request.user.last_report))
             if lastReport.reportTime == datetime.now().date():
@@ -36,10 +68,13 @@ def reportCreate(request):
                 lastReport.contact = contacts
                 lastReport.places = places
                 lastReport.reportTime = datetime.now()
+                deleteNonActualFeatures(lastReport.features)
+                lastReport.features = ids
                 lastReport.save()
                 return render(request, "successreport.html")
             else:
                 lastReport.reportEndTime = datetime.now()
+                deleteNonActualFeatures(lastReport.features)
                 lastReport.save()
         except:
             pass
@@ -48,7 +83,8 @@ def reportCreate(request):
             symptoms=symptoms,
             status=status,
             contact=contacts,
-            places=places
+            places=places,
+            features=ids,
         )
         report.save()
         request.user.last_report = report.id
@@ -138,8 +174,13 @@ def getPlaces(request):
                 answer['danger'] = 2
     return HttpResponse(json.dumps(answer))
 
+
 def instructionView(request):
     return render(request, "instruction.html")
 
+
 def isolinesView(request):
     return render(request, "isolines.html")
+
+def routerView(request):
+    return render(request, 'router.html')

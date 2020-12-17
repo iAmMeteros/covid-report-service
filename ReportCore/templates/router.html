@@ -1,0 +1,35 @@
+{% extends "report-base.html" %}
+{% load static %}
+{% block title %}Навигация{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/map.css' %}">
+
+<script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-clustering.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+<script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
+{% endblock %}
+{% block content %}
+<div class="content container-fluid">
+    <h1 class="title">Навигация</h1>
+    <span class="label">Задайте начальный и конечный пункт маршрута ниже. Мы оценим риск заражения на маршруте, а также по возможности предоставим альтернативы.</span><br><br>
+    <div class="searchParameters">
+        <h4><i class="fas fa-location-circle"></i> Откуда</h4>
+        <input type="text" id="pointA" value="тухачевского 80">
+        <h4><i class="fas fa-location-circle"></i> Куда</h4>
+        <input type="text" id="pointB" value="парниковая 27а"><br>
+    </div>
+    <div class="sendButton" onclick="createRoute()">Построить <i class="fas fa-search-location"></i></div><br><br>
+    <br>
+    <div id="map"></div><br>
+    <div class="result">
+        <h3>Риск заражения: <span id="dangerLevel">уровень</span></h3>
+        <div id="info"></div>
+    </div><br><br><br><br>
+</div>
+<script src="{% static 'js/routing.js' %}"></script>
+{% endblock %}

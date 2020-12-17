@@ -37,3 +37,4 @@ class Report(models.Model):
     status = models.CharField(_("Состояние"), max_length=1, choices=STATUSES, default='W')
     contact = models.CharField(_("Контакты"), max_length=1, choices=CONTACTS, default='N')
     places = models.TextField(_("Места пребывания"), blank=True)
+    features = models.TextField(_("Записи в HERE Data Hub"), blank=True)
