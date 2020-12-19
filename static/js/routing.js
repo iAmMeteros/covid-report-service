@@ -1,18 +1,100 @@
+function switchRoute() {
+    if (currentRoute == 0) {
+        //Первый
+        renderRoute(safestRoute)
+        currentRoute = 1
+        switch (safectRouteStatus) {
+            case 0:
+                $("#dangerLevel").html("низкий")
+                $("#dangerLevel").removeClass()
+                $("#dangerLevel").addClass("green")
+                break;
+            case 1:
+                $("#dangerLevel").html("средний")
+                $("#dangerLevel").removeClass()
+                $("#dangerLevel").addClass("yellow")
+                break;
+            case 2:
+                $("#dangerLevel").html("высокий")
+                $("#dangerLevel").removeClass()
+                $("#dangerLevel").addClass("red")
+                break;
+            default:
+                break;
+        }
+    } else {
+        //Безопасный
+        renderRoute(firstFoundedRoute)
+        currentRoute = 0
+        switch (firstRouteStatus) {
+            case 0:
+                $("#dangerLevel").html("низкий")
+                $("#dangerLevel").removeClass()
+                $("#dangerLevel").addClass("green")
+                break;
+            case 1:
+                $("#dangerLevel").html("средний")
+                $("#dangerLevel").removeClass()
+                $("#dangerLevel").addClass("yellow")
+                break;
+            case 2:
+                $("#dangerLevel").html("высокий")
+                $("#dangerLevel").removeClass()
+                $("#dangerLevel").addClass("red")
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+function renderRoute(route) {
+    map.removeObjects(map.getObjects())
+
+    map.addObject(new H.map.Marker({
+        lat: posA.lat,
+        lng: posA.lng
+    }))
+
+    map.addObject(new H.map.Marker({
+        lat: posB.lat,
+        lng: posB.lng
+    }))
+
+    var routeS = route.shape
+    addRouteShapeToMap(route)
+    addManueversToMap(route);
+    addManueversToPanel(route);
+    addSummaryToPanel(route.summary);
+}
+
 function onRouteFound(result) {
-    var route = result.response.route[0].shape
-    addRouteShapeToMap(result.response.route[0])
-    addManueversToMap(result.response.route[0]);
-    addManueversToPanel(result.response.route[0]);
-    addSummaryToPanel(result.response.route[0].summary);
+    $("#switchRoute").hide(0)
+    console.log(result)
+    var firstRoute = result.response.route[0]
+    var alternativeRoutes = result.response.route.slice(1)
+
+    safestRoute = null;
+    safeRouteFound = false;
+    currentRoute = 0;
+    firstFoundedRoute = firstRoute
+    safectRouteStatus = 0
+    firstRouteStatus = 0
+
+    var routeS = firstRoute.shape
+    addRouteShapeToMap(firstRoute)
+    addManueversToMap(firstRoute);
+    addManueversToPanel(firstRoute);
+    addSummaryToPanel(firstRoute.summary);
     var payload = {
         "type": "LineString",
         "coordinates": [],
     }
-    route.forEach(element => {
+    routeS.forEach(element => {
         var arrayToAppens = element.split(',')
         payload.coordinates.push([parseFloat(arrayToAppens[1]), parseFloat(arrayToAppens[0])])
     });
-    fetch(`https://xyz.api.here.com/hub/spaces/${config.SPACE_ID}/spatial?access_token=${config.HUB_TOKEN}&radius=100`, {
+    fetch(`https://xyz.api.here.com/hub/spaces/${config.SPACE_ID}/spatial?access_token=${config.HUB_TOKEN}&radius=200`, {
             method: 'POST',
             body: JSON.stringify(payload),
             headers: {
@@ -21,15 +103,76 @@ function onRouteFound(result) {
         })
         .then((res) => res.json()).then((features) => {
             var points = features.features
+            minimalFeaturesInRoute = points.length
             if (points.length == 0) {
                 $("#dangerLevel").html("низкий")
+                $("#dangerLevel").removeClass()
                 $("#dangerLevel").addClass("green")
+                firstRouteStatus = 0
             } else if (points.length < 5) {
                 $("#dangerLevel").html("средний")
+                $("#dangerLevel").removeClass()
                 $("#dangerLevel").addClass("yellow")
+                firstRouteStatus = 1
             } else {
                 $("#dangerLevel").html("высокий")
+                $("#dangerLevel").removeClass()
                 $("#dangerLevel").addClass("red")
+                firstRouteStatus = 2
+            }
+
+            $(".result").show(500)
+
+            if (points.length > 0) {
+                var loop = new Promise((resolve, reject) => {
+                    alternativeRoutes.forEach((route, index, array) => {
+                        var routeS = route.shape
+                        var payload = {
+                            "type": "LineString",
+                            "coordinates": [],
+                        }
+                        routeS.forEach(element => {
+                            var arrayToAppens = element.split(',')
+                            payload.coordinates.push([parseFloat(arrayToAppens[1]), parseFloat(arrayToAppens[0])])
+                        });
+                        fetch(`https://xyz.api.here.com/hub/spaces/${config.SPACE_ID}/spatial?access_token=${config.HUB_TOKEN}&radius=200`, {
+                                method: 'POST',
+                                body: JSON.stringify(payload),
+                                headers: {
+                                    'Content-Type': 'application/geo+json'
+                                }
+                            })
+                            .then((res) => res.json()).then((features) => {
+                                var points = features.features
+                                if (minimalFeaturesInRoute > points.length) {
+                                    minimalFeaturesInRoute = points.length
+                                    safestRoute = route
+                                    safeRouteFound = true;
+                                    if (points.length == 0) {
+                                        safectRouteStatus = 0
+                                    } else if (points.length < 5) {
+                                        safectRouteStatus = 1
+                                    } else {
+                                        safectRouteStatus = 2
+                                    }
+                                }
+                                if (index === array.length - 1) resolve()
+                            })
+                    })
+                })
+
+                loop.then(() => {
+                    if (!safeRouteFound) {
+                        $("#altTitle").html('Мы не нашли более безопасный маршрут')
+                        $("#altDescription").html('Мы стараемся предлагать вам более быстрые маршруты, в данном случае маршрут с меньшим риском заражения отнимет у вас много времени.')
+                        $(".alternative").show(500)
+                    } else {
+                        $("#altTitle").html('Альтернативный маршрут')
+                        $("#altDescription").html('Построенный маршрут не является самым безопасным, вместо него мы нашли другой, с меньшим риском заражения.')
+                        $("#switchRoute").show(0)
+                        $(".alternative").show(500)
+                    }
+                })
             }
         })
 }
@@ -47,6 +190,14 @@ function openBubble(position, text) {
         bubble.open();
     }
 }
+
+var safestRoute = null;
+var minimalFeaturesInRoute;
+var safeRouteFound = false;
+var firstFoundedRoute = null;
+var currentRoute = 0;
+var safectRouteStatus = 0;
+var firstRouteStatus = 0;
 
 function addRouteShapeToMap(route, color = 'rgba(0, 128, 255, 0.7)') {
     var lineString = new H.geo.LineString(),
@@ -112,8 +263,7 @@ function addManueversToMap(route) {
 function addSummaryToPanel(summary) {
     var summaryDiv = document.createElement('div'),
         content = '';
-    content += '<b>Total distance</b>: ' + summary.distance + 'm. <br/>';
-    content += '<b>Travel Time</b>: ' + summary.travelTime.toMMSS() + ' (in current traffic)';
+    content += '<b>Время в пути: </b>: ' + summary.travelTime.toMMSS();
 
     summaryDiv.style.fontSize = 'small';
     summaryDiv.style.marginLeft = '5%';
@@ -123,6 +273,7 @@ function addSummaryToPanel(summary) {
 }
 
 function addManueversToPanel(route) {
+    $("#info").html('')
     var nodeOL = document.createElement('ol'),
         i,
         j;
@@ -161,9 +312,14 @@ function onError(error) {
     alert('Мы не смогли проложить маршрут.')
 }
 
+var posA
+var posB
+
 function createRoute() {
     var adressFrom = $("#pointA").val()
     var adressTo = $("#pointB").val()
+
+    map.removeObjects(map.getObjects())
 
     service.autosuggest({
         q: adressFrom,
@@ -176,7 +332,7 @@ function createRoute() {
             lat: position.lat,
             lng: position.lng
         }))
-        var posA = position
+        posA = position
 
         service.autosuggest({
             q: adressTo,
@@ -190,7 +346,7 @@ function createRoute() {
                 lng: position.lng
             }))
 
-            var posB = position
+            posB = position
 
             routingParams.waypoint0 = posA.lat.toString() + ',' + posA.lng.toString()
             routingParams.waypoint1 = posB.lat.toString() + ',' + posB.lng.toString()
@@ -215,8 +371,10 @@ var routingParams = {
     waypoint1: '00.00,00.00',
     routeAttributes: 'waypoints,summary,shape,legs',
     maneuverattributes: 'direction,action',
-    language: 'ru-ru'
+    language: 'ru-ru',
+    alternatives: 5
 }
+
 
 var router = platform.getRoutingService();
 

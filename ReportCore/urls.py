@@ -10,4 +10,5 @@ urlpatterns = [
     path('instruction/', instructionView),
     path('isolines/', isolinesView),
     path('route/', routerView),
+    path('places/', placesView),
 ]

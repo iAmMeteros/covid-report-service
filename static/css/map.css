@@ -62,6 +62,11 @@ html, body {
 .result h3 {
   font-family: "Raleway", sans-serif;
 }
+.result p {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.3rem;
+  margin: 0;
+}
 
 .red {
   color: #b93232;

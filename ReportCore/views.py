@@ -184,3 +184,6 @@ def isolinesView(request):
 
 def routerView(request):
     return render(request, 'router.html')
+
+def placesView(request):
+    return render(request, 'places.html')

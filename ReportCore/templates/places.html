@@ -1,0 +1,43 @@
+{% extends "report-base.html" %}
+{% load static %}
+{% block title %}Поиск мест{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/map.css' %}">
+
+<script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-clustering.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+<script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
+{% endblock %}
+{% block content %}
+<div class="content container-fluid">
+    <h1 class="title">Поиск безопасных мест</h1>
+    <span class="label">Введите адрес места, которое вы хотите посетить, и мы предоставим информацию о риске заражения в нём.</span><br><br>
+    <div class="searchParameters">
+        <h4><i class="fas fa-location-circle"></i> Адрес</h4>
+        <input type="text" id="adress">
+    </div>
+    <div class="sendButton" onclick="searchPlace()">Найти <i class="fas fa-search-location"></i></div><br><br>
+    <br>
+    <div id="map"></div><br>
+    <div class="result">
+        <h3 id="placeTitle">Космопорт, Торгово-Развлекательный центр</h3>
+        <p>Риск заражения: <span id="dangerLevel">уровень</span></p>
+        <p>Категория: <span id="placeType">ТЦ</span></p><br><br>
+        <div class="nearby">
+            <h3>Похожие места рядом</h3>
+            <span>Место, которое вы искали, было помечено как часто посещаемое людьми, заразившимися инфекцией. Поэтому, мы нашли несколько альтернативных мест неподалёку.</span><br>
+            <p id="placesList"></p>
+        </div>
+    </div><br><br><br><br>
+</div>
+<script>
+    $(".nearby").hide(0)
+    $(".result").hide(0)
+</script>
+<script src="{% static 'js/places.js' %}"></script>
+{% endblock %}

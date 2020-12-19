@@ -16,20 +16,31 @@
 {% block content %}
 <div class="content container-fluid">
     <h1 class="title">Навигация</h1>
-    <span class="label">Задайте начальный и конечный пункт маршрута ниже. Мы оценим риск заражения на маршруте, а также по возможности предоставим альтернативы.</span><br><br>
+    <span class="label">Задайте начальный и конечный пункт маршрута ниже. Мы оценим риск заражения на маршруте, а также
+        по возможности предоставим альтернативы.</span><br><br>
     <div class="searchParameters">
         <h4><i class="fas fa-location-circle"></i> Откуда</h4>
-        <input type="text" id="pointA" value="тухачевского 80">
+        <input type="text" id="pointA" >
         <h4><i class="fas fa-location-circle"></i> Куда</h4>
-        <input type="text" id="pointB" value="парниковая 27а"><br>
+        <input type="text" id="pointB" ><br>
     </div>
     <div class="sendButton" onclick="createRoute()">Построить <i class="fas fa-search-location"></i></div><br><br>
     <br>
     <div id="map"></div><br>
     <div class="result">
         <h3>Риск заражения: <span id="dangerLevel">уровень</span></h3>
-        <div id="info"></div>
+        <div id="info"></div><br><br>
+        <div class="alternative">
+            <h3 id="altTitle">Альтернативный маршрут</h3>
+            <span id="altDescription">Построенный маршрут не является самым безопасным, вместо него мы нашли другой, с меньшим риском заражения.</span><br>
+            <div class="sendButton" id="switchRoute" onclick="switchRoute()">Сменить маршрут <i class="fas fa-repeat-alt"></i></div>
+        </div>
     </div><br><br><br><br>
 </div>
+<script>
+    $("#switchRoute").hide(0)
+    $(".alternative").hide(0)
+    $(".result").hide(0)
+</script>
 <script src="{% static 'js/routing.js' %}"></script>
 {% endblock %}
